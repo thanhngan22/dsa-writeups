@@ -6,52 +6,55 @@ using namespace std;
 struct Node {
     int data;
     Node *next;
+    Node (int data) {
+        this->data = data;
+        next = NULL;
+    }
 };
 
 // insert node at the end of the list
-void insert(Node **head, int data) {
-    Node *newNode = new Node();
-    newNode->data = data;
-    newNode->next = NULL;
+void insert(Node **head, Node *&node) {
     if (*head == NULL) {
-        *head = newNode;
+        *head = node;
         return;
     }
     Node *temp = *head;
     while (temp->next != NULL) {
         temp = temp->next;
     }
-    temp->next = newNode;
+    temp->next = node;
 }
 
 bool hasCycle(Node *head) {
-    if (head == NULL) {
-        return false;
-    }
-    vector <int> v;
-    while (head != NULL) {
-        if (find(v.begin(), v.end(), head->data) != v.end()) {
+   Node *temp = head;
+   if (head == NULL || head->next == NULL) {
+         return false;
+   }
+
+   Node *p = head;
+   while (head != NULL && head->next != NULL) {
+    while (p != head) {
+        if (p == head->next) {
             return true;
-        } else {
-            v.push_back(head->data);
         }
-        head = head->next;
+        p = p->next;
     }
-    return false;
-
-    // NOT FINISHED, NEED FIX BUGS LATER
-
+    head = head->next;
+    p = temp;
+   }
+   return false;
 }
 
 int main() {
-    int n;
-    cin >> n;
     Node *head = NULL;
-    for (int i = 0; i < n; i++) {
-        int data;
-        cin >> data;
-        insert(&head, data);
-    }
+    Node *first = new Node(1);
+    Node *second = new Node(2);
+    Node *third = new Node(3);
+
+    insert(&head, first);
+    insert(&head, second);
+    insert(&head, third);
+    third->next = second;
 
     if (hasCycle(head)) {
         cout << "Yes" << endl;
