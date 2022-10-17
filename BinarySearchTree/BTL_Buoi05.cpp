@@ -1,16 +1,5 @@
-// viết hàm in ra giá trị lớn nhất trong cây
-
-// viết hàm tìm 1 số có trong cây hay không
-
-// xóa một node trong cây nhị phân tìm kiếm 
-
-// viết hàm kiểm tra xem một cây nhị phân có phải là cây nhị phân tìm kiếm hay không
 
 // viết hàm kiểm tra xem một cây nhị phân tìm kiếm có cân bằng hay không và tiến hành cân bằng lại nếu cây bị lệch
-
-// viết hàm xoay trái một node trong cây nhị phân tìm kiếm
-
-// viết hàm xoay phải một node trong cây nhị phân tìm kiếm
 
 // tạo cây nhị phân hoàn chỉnh từ dãy số cho trước
 
@@ -107,6 +96,54 @@ void LRN(Node *root) {
     cout << root->key << " ";
 }
 
+// viết hàm in ra giá trị lớn nhất trong cây
+int maxNode(BST *tree) {
+    if (tree->root == NULL) {
+        exit(225);
+    }
+    Node *temp = tree->root;
+    while (temp->pRight != NULL) {
+        temp = temp->pRight;
+    }
+    return temp->key;
+}
+
+// viết hàm tìm 1 số có trong cây hay không
+bool isExistNode(BST *tree, int key) {
+    Node *temp = tree->root;
+    while (temp != NULL) {
+        if (key == temp->key) {
+            return true;
+        } else if (key < temp->key) {
+            temp = temp->pLeft;
+        } else {
+            temp = temp->pRight;
+        }
+    }
+    return false;
+}
+
+// viết hàm kiểm tra xem một cây nhị phân có phải là cây nhị phân tìm kiếm hay không
+bool isBST(BST *tree) {
+
+}
+
+// xóa một node trong cây nhị phân tìm kiếm 
+void deleteNode(BST *&tree) {
+
+}
+
+// viết hàm xoay trái một node trong cây nhị phân tìm kiếm
+void rotateLeft(Node *&root) {
+
+}
+
+// viết hàm xoay phải một node trong cây nhị phân tìm kiếm
+void rotateRight(Node *&root) {
+
+}
+
+
 int main() {
     // tạo cây nhị phân tìm kiếm từ dãy số sau:
     // 33 14 15 92 64 35 79 27 38 9 105 99 120 5 8
@@ -138,6 +175,17 @@ int main() {
     cout << endl;
     cout << "LRN: ";
     LRN(tree->root);
-    
+
+    // max value of tree
+    cout << "max value of BST tree: " << maxNode(tree) << endl;
+
+    // check whether existing 27 , 35, 5 and 103 or not
+    cout << "27: " << isExistNode(tree, 27) << endl;
+    cout << "35: " << isExistNode(tree, 35) << endl;
+    cout << "5: " << isExistNode(tree, 5) << endl;
+    cout << "103: " << isExistNode(tree, 103) << endl;
+
+
+
     return 225;
 }
