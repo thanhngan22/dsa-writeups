@@ -1,6 +1,3 @@
-
-// viết hàm kiểm tra xem một cây nhị phân tìm kiếm có cân bằng hay không và tiến hành cân bằng lại nếu cây bị lệch
-
 // tạo cây nhị phân hoàn chỉnh từ dãy số cho trước
 
 // viết hàm max-heapify
@@ -148,8 +145,48 @@ bool isBST(Node *root) {
     }
 }
 
+// hàm tìm giá trị trái nhất của cây  
+int mostLeft(Node *root) {
+    while (root->pLeft != NULL) {
+        root = root->pLeft;
+    }
+    return root->key;
+}
+
+// hàm tìm giá trị phải nhất của cây 
+int mostRight(Node *root) {
+    while (root->pRight != NULL) {
+        root = root->pRight;
+    }
+    return root->key;
+}
+
+// hàm giải phóng 1 node
+void freeNode (Node *&node) {
+    delete (node->pLeft);
+    delete (node->pRight);
+    delete (node);
+    node = NULL;
+}
+
+// hàm giải phóng 1 cây 
+void freeTree (Node *&root) {
+    if (root == NULL) {
+        return;
+    }
+    freeTree(root->pLeft);
+    freeTree(root->pRight);
+    free(root);
+}
+
+
 // xóa một node trong cây nhị phân tìm kiếm 
 void deleteNode(BST *&tree) {
+    // node là node lá
+
+    // node có 1 con
+
+    // node có đủ 2 con
 
 }
 
@@ -162,6 +199,22 @@ void rotateLeft(Node *&root) {
 void rotateRight(Node *&root) {
 
 }
+
+// viết hàm kiểm tra xem một cây nhị phân tìm kiếm có cân bằng hay không 
+bool isBalanceBST (Node *root) {
+
+}
+
+// viết hàm kiểm tra xem cây nhị phân tìm kiếm bị lệch kiểu gì: RR -> 1; RL -> 2; LL -> 3; LR -> 4
+int typeNotBalanceBST (Node *root) {
+
+}
+
+// viết hàm cân bằng lại cây nhị phân tìm kiếm nếu cây bị lệch
+void balanceBST (Node *&root) {
+
+}
+
 
 
 int main() {
@@ -216,6 +269,10 @@ int main() {
 
     cout << "is BST ? " <<  isBST(tree->root) << endl;
     cout << "is BST ? " << isBST(tree2->root) << endl;
+
+    // value of most left and most right
+    cout << "most left: " << mostLeft(tree->root) << endl;
+    cout << "most right: " << mostRight(tree->root) << endl;
 
 
 
