@@ -106,8 +106,8 @@ int maxNode(BST *tree) {
 }
 
 // viết hàm tìm 1 số có trong cây hay không
-bool isExistNode(BST *tree, int key) {
-    Node *temp = tree->root;
+bool isExistNode(Node *root, int key) {
+    Node *temp = root;
     while (temp != NULL) {
         if (key == temp->key) {
             return true;
@@ -181,13 +181,87 @@ void freeTree (Node *&root) {
 
 
 // xóa một node trong cây nhị phân tìm kiếm 
-void deleteNode(BST *&tree) {
-    // node là node lá
+void deleteNode(Node *&root, int key) {
+    Node *temp = root;
+    Node *prev = NULL;
+    if ( ! isExistNode(root, key)) {
+        cout << key << "is not exist in BST" << endl;
+        return ;
+    }
+    while (temp != NULL) {
+        if (temp->key == key) {
+            // node là node lá 
+            if (temp->pLeft == NULL && temp->pRight == NULL) {
+                if (prev->pLeft != NULL && prev->pLeft->key == key) {
+                    prev->pLeft = NULL;
+                    freeNode(temp);
+                    return;
+                } else {
+                    prev->pRight = NULL;
+                    freeNode(temp);
+                    return ;
+                }
+            }
 
-    // node có 1 con
+            // node có đủ 2 con 
+            if (temp->pLeft != NULL && temp->pRight != NULL) {
+                // tìm phần tử thế mạng : node trái nhất của cây con phải
+                int replaceNode = mostLeft(temp->pRight);
+                deleteNode(temp, replaceNode);
+                temp->key = replaceNode;
+                return;
+            }
 
-    // node có đủ 2 con
-
+            // node có 1 con
+            if (temp->pLeft != NULL) {
+                if (prev == NULL) {
+                    // trường hợp temp là root
+                    root = root->pLeft;
+                    freeNode(temp);
+                    return;
+                } else {
+                    if (prev->pLeft != NULL && prev->pLeft->key == key) {
+                        // trường hợp temp là cây con trái của node cha prev
+                        prev->pLeft = temp->pLeft;
+                        freeNode(temp);
+                        return;
+                    } else {
+                        // temp là cây con phải của node cha prev
+                        prev->pRight = temp->pLeft;
+                        freeNode(temp);
+                        return;
+                    }
+                }
+            } else {
+                if (prev == NULL) {
+                    // trường hợp temp là root
+                    root = root->pRight;
+                    freeNode(temp);
+                    return;
+                } else {
+                    if (prev->pLeft != NULL && prev->pLeft->key == key) {
+                        // trường hợp node cần xóa là node con trái của node cha prev
+                        prev->pLeft = temp->pRight;
+                        freeNode(temp);
+                        return;
+                    } else {
+                        // node cần xóa là node con phải của node cha prev
+                        prev->pRight = temp->pRight;
+                        freeNode(temp);
+                        return;
+                    }
+                }
+            }
+        } else {
+            if (key < temp->key) {
+                prev = temp;
+                temp = temp->pLeft;
+            } else {
+                prev = temp;
+                temp = temp->pRight;
+            }
+        }
+    }
 }
 
 // viết hàm xoay trái một node trong cây nhị phân tìm kiếm
@@ -253,10 +327,10 @@ int main() {
     cout << "max value of BST tree: " << maxNode(tree) << endl;
 
     // check whether existing 27 , 35, 5 and 103 or not
-    cout << "27: " << isExistNode(tree, 27) << endl;
-    cout << "35: " << isExistNode(tree, 35) << endl;
-    cout << "5: " << isExistNode(tree, 5) << endl;
-    cout << "103: " << isExistNode(tree, 103) << endl;
+    cout << "27: " << isExistNode(tree->root, 27) << endl;
+    cout << "35: " << isExistNode(tree->root, 35) << endl;
+    cout << "5: " << isExistNode(tree->root, 5) << endl;
+    cout << "103: " << isExistNode(tree->root, 103) << endl;
 
     // is BST
     // create a tree to check
@@ -274,7 +348,23 @@ int main() {
     cout << "most left: " << mostLeft(tree->root) << endl;
     cout << "most right: " << mostRight(tree->root) << endl;
 
+    // delete 8
+    deleteNode(tree->root, 8);
+    cout << "NLR: ";
+    NLR(tree->root);
+    cout << endl;
 
+    // delete 9
+    deleteNode(tree->root, 9);
+    // cout << "NLR: ";
+    // NLR(tree->root);
+    // cout << endl;
+
+    // delete 64
+    // deleteNode(tree->root, 64);
+    // cout << "NLR: ";
+    // NLR(tree->root);
+    // cout << endl;
 
     return 225;
 }
