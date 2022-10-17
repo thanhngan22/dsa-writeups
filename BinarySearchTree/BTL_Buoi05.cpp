@@ -302,8 +302,49 @@ void rotateLeft(Node *&root, int key) {
 }
 
 // viết hàm xoay phải một node trong cây nhị phân tìm kiếm
-void rotateRight(Node *&root) {
+void rotateRight(Node *&root, int key) {
+    Node *temp = root;
+    Node *prev = NULL;
+    while (temp->key != key) {
+        if (temp->key < key) {
+            prev = temp;
+            temp = temp->pRight;
+        } else {
+            prev = temp;
+            temp = temp->pLeft;
+        }
+    }
+        if (temp->pLeft->pRight != NULL) {
+            Node *abandonNode = temp->pLeft->pRight;
+            if (prev == NULL) {
+                // trường hợp đó là node root
+                root = temp->pLeft;
+            } else {
+                if (prev->pRight->key == key) {
+                    prev->pRight = temp->pLeft;
 
+                } else {
+                    prev->pLeft = temp->pLeft;
+                }
+            }
+            temp->pLeft->pRight = temp;
+            temp->pLeft = abandonNode;
+            return;
+        } else {
+            if (prev == NULL) {
+                // trường hợp đó là node root
+                root = temp->pLeft;
+            } else {
+                if (prev->pRight->key == key) {
+                    prev->pRight = temp->pLeft;
+
+                } else {
+                    prev->pLeft = temp->pLeft;
+                }
+            }           
+            temp->pLeft->pRight = temp;
+            return;
+        }
 }
 
 // viết hàm kiểm tra xem một cây nhị phân tìm kiếm có cân bằng hay không 
@@ -388,41 +429,54 @@ int main() {
     cout << "most left: " << mostLeft(tree->root) << endl;
     cout << "most right: " << mostRight(tree->root) << endl;
 
-    // delete 8
-    deleteNode(tree->root, 8);
-    cout << "NLR: ";
-    NLR(tree->root);
-    cout << endl;
+    // // delete 8
+    // deleteNode(tree->root, 8);
+    // cout << "NLR: ";
+    // NLR(tree->root);
+    // cout << endl;
 
-    // delete 9
-    deleteNode(tree->root, 9);
-    cout << "NLR: ";
-    NLR(tree->root);
-    cout << endl;
+    // // delete 9
+    // deleteNode(tree->root, 9);
+    // cout << "NLR: ";
+    // NLR(tree->root);
+    // cout << endl;
 
-    // delete 64
-    deleteNode(tree->root, 64);
-    cout << "NLR: ";
-    NLR(tree->root);
-    cout << endl;
+    // // delete 64
+    // deleteNode(tree->root, 64);
+    // cout << "NLR: ";
+    // NLR(tree->root);
+    // cout << endl;
 
-    // delete 33
-    deleteNode(tree->root, 33);
-    cout << "NLR: ";
-    NLR(tree->root);
-    cout << endl;
+    // // delete 33
+    // deleteNode(tree->root, 33);
+    // cout << "NLR: ";
+    // NLR(tree->root);
+    // cout << endl;
 
-    // rotate node 92 toward left
-    rotateLeft(tree->root, 92);
-    cout << "NLR: ";
-    NLR(tree->root);
-    cout << endl;
+    // // rotate node 92 toward left
+    // rotateLeft(tree->root, 92);
+    // cout << "NLR: ";
+    // NLR(tree->root);
+    // cout << endl;
 
-    // rotate node 33 toward left
-    rotateLeft(tree->root, 33);
-    cout << "NLR: ";
-    NLR(tree->root);
-    cout << endl;
+    // // rotate node 33 toward left
+    // rotateLeft(tree->root, 33);
+    // cout << "NLR: ";
+    // NLR(tree->root);
+    // cout << endl;
+
+    
+    // // rotate node 33 toward right
+    // rotateRight(tree->root, 33);
+    // cout << "NLR: ";
+    // NLR(tree->root);
+    // cout << endl;
+    
+    // // rotate node 92 toward right
+    // rotateRight(tree->root, 92);
+    // cout << "NLR: ";
+    // NLR(tree->root);
+    // cout << endl;
 
     return 225;
 }
