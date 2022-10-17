@@ -124,8 +124,28 @@ bool isExistNode(BST *tree, int key) {
 }
 
 // viết hàm kiểm tra xem một cây nhị phân có phải là cây nhị phân tìm kiếm hay không
-bool isBST(BST *tree) {
-
+bool isBST(Node *root) {
+    if (root->pLeft == NULL && root->pRight == NULL) {
+        return 1;
+    }
+    if (root->pLeft != NULL && root->pRight != NULL ) {
+        if (root->pLeft->key < root->key && root->pRight->key > root->key) {
+            return isBST(root->pLeft) + isBST(root->pRight);
+        } else {
+            return false;
+        }
+    } else {
+        if (root->pLeft != NULL) {
+            if (root->pLeft->key < root->key) {
+                return isBST(root->pLeft);
+            }
+        }
+        if (root->pRight != NULL) {
+            if (root->pRight->key > root->key) {
+                return isBST(root->pRight);
+            }
+        }
+    }
 }
 
 // xóa một node trong cây nhị phân tìm kiếm 
@@ -184,6 +204,18 @@ int main() {
     cout << "35: " << isExistNode(tree, 35) << endl;
     cout << "5: " << isExistNode(tree, 5) << endl;
     cout << "103: " << isExistNode(tree, 103) << endl;
+
+    // is BST
+    // create a tree to check
+    Node *nodeTree2 = createNode(22);
+    BST *tree2 = createBST(nodeTree2);
+    Node *tree2Left = createNode(2003);
+    Node *tree2Right = createNode(5);
+    tree2->root->pLeft = tree2Left;
+    tree2->root->pRight = tree2Right;
+
+    cout << "is BST ? " <<  isBST(tree->root) << endl;
+    cout << "is BST ? " << isBST(tree2->root) << endl;
 
 
 
