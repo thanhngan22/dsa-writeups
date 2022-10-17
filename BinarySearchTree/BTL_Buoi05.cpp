@@ -1,8 +1,3 @@
-// tạo cây nhị phân tìm kiếm từ dãy số sau:
-// 33 14 15 92 64 35 79 27 38 9 105 99 120 5 8
-
-// phép duyệt NLR, LNR, LRN
-
 // viết hàm in ra giá trị lớn nhất trong cây
 
 // viết hàm tìm 1 số có trong cây hay không
@@ -92,7 +87,30 @@ void NLR(Node *root) {
     NLR(root->pRight);
 }
 
+// phép duyệt LNR
+void LNR (Node *root) {
+    if (root == NULL) {
+        return;
+    }
+    LNR(root->pLeft);
+    cout << root->key << " ";
+    LNR(root->pRight);
+}
+
+// phép duyệt LRN
+void LRN(Node *root) {
+    if (root == NULL) {
+        return;
+    }
+    LRN(root->pLeft);
+    LRN(root->pRight);
+    cout << root->key << " ";
+}
+
 int main() {
+    // tạo cây nhị phân tìm kiếm từ dãy số sau:
+    // 33 14 15 92 64 35 79 27 38 9 105 99 120 5 8
+
     Node *pNode = createNode(33);
     BST *tree = createBST(pNode);
     addNode(tree->root, 14);
@@ -112,5 +130,14 @@ int main() {
 
     cout << "NLR: ";
     NLR(tree->root);
+
+    cout << endl;
+    cout << "LNR: ";
+    LNR(tree->root);
+
+    cout << endl;
+    cout << "LRN: ";
+    LRN(tree->root);
+    
     return 225;
 }
