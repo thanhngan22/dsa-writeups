@@ -1,11 +1,3 @@
-// tạo cây nhị phân hoàn chỉnh từ dãy số cho trước
-
-// viết hàm max-heapify
-
-// viết hàm min-heapify
-
-// viết hàm sắp xếp thuật toán vun đống
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -163,8 +155,6 @@ int mostRight(Node *root) {
 
 // hàm giải phóng 1 node
 void freeNode (Node *&node) {
-    delete (node->pLeft);
-    delete (node->pRight);
     delete (node);
     node = NULL;
 }
@@ -223,6 +213,7 @@ void deleteNode(Node *&root, int key) {
                     if (prev->pLeft != NULL && prev->pLeft->key == key) {
                         // trường hợp temp là cây con trái của node cha prev
                         prev->pLeft = temp->pLeft;
+
                         freeNode(temp);
                         return;
                     } else {
@@ -264,9 +255,50 @@ void deleteNode(Node *&root, int key) {
     }
 }
 
-// viết hàm xoay trái một node trong cây nhị phân tìm kiếm
-void rotateLeft(Node *&root) {
+// viết hàm xoay trái một node trong cây nhị phân tìm kiếm (mặc định là node cần xoay có node con phải khỏi cần kiểm tra)
+void rotateLeft(Node *&root, int key) {
+    Node *temp = root;
+    Node *prev = NULL;
+    while (temp->key != key) {
+        if (temp->key < key) {
+            prev = temp;
+            temp = temp->pRight;
+        } else {
+            prev = temp;
+            temp = temp->pLeft;
+        }
+    }
+        if (temp->pRight->pLeft != NULL) {
+            Node *abandonNode = temp->pRight->pLeft;
+            if (prev == NULL) {
+                // trường hợp đó là node root
+                root = temp->pRight;
+            } else {
+                if (prev->pRight->key == key) {
+                    prev->pRight = temp->pRight;
 
+                } else {
+                    prev->pLeft = temp->pRight;
+                }
+            }
+            temp->pRight->pLeft = temp;
+            temp->pRight = abandonNode;
+            return;
+        } else {
+            if (prev == NULL) {
+                // trường hợp đó là node root
+                root = temp->pRight;
+            } else {
+                if (prev->pRight->key == key) {
+                    prev->pRight = temp->pRight;
+
+                } else {
+                    prev->pLeft = temp->pRight;
+                }
+            }           
+            temp->pRight->pLeft = temp;
+            return;
+        }
 }
 
 // viết hàm xoay phải một node trong cây nhị phân tìm kiếm
@@ -288,6 +320,14 @@ int typeNotBalanceBST (Node *root) {
 void balanceBST (Node *&root) {
 
 }
+
+// tạo cây nhị phân hoàn chỉnh từ dãy số cho trước
+
+// viết hàm max-heapify
+
+// viết hàm min-heapify
+
+// viết hàm sắp xếp thuật toán vun đống
 
 
 
@@ -356,15 +396,33 @@ int main() {
 
     // delete 9
     deleteNode(tree->root, 9);
-    // cout << "NLR: ";
-    // NLR(tree->root);
-    // cout << endl;
+    cout << "NLR: ";
+    NLR(tree->root);
+    cout << endl;
 
     // delete 64
-    // deleteNode(tree->root, 64);
-    // cout << "NLR: ";
-    // NLR(tree->root);
-    // cout << endl;
+    deleteNode(tree->root, 64);
+    cout << "NLR: ";
+    NLR(tree->root);
+    cout << endl;
+
+    // delete 33
+    deleteNode(tree->root, 33);
+    cout << "NLR: ";
+    NLR(tree->root);
+    cout << endl;
+
+    // rotate node 92 toward left
+    rotateLeft(tree->root, 92);
+    cout << "NLR: ";
+    NLR(tree->root);
+    cout << endl;
+
+    // rotate node 33 toward left
+    rotateLeft(tree->root, 33);
+    cout << "NLR: ";
+    NLR(tree->root);
+    cout << endl;
 
     return 225;
 }
