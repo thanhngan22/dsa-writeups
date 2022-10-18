@@ -28,6 +28,10 @@ BST *createBST(Node *&pNode) {
 
 // viết hàm thêm node mới vào trong cây
 void addNode(Node *&root, int key) {
+        if (key == root->key) {
+        cout << "key existed ! " << endl;
+        return;
+    } 
     if (root->pLeft == NULL) {
         if (root->key > key) {
             Node *pNode = createNode(key);
@@ -44,10 +48,6 @@ void addNode(Node *&root, int key) {
         }
     }
     
-    if (key == root->key) {
-        cout << "key existed ! " << endl;
-        return;
-    } 
     if (key < root->key) {
         addNode(root->pLeft, key);
     } else {
@@ -385,6 +385,25 @@ int keyMakingNotBalance(Node *root) {
     }
 }
 
+// viết hàm kiểm tra xem có đường đi từ root đến node lá mà có tổng bằng sum không
+bool hasPathSum(Node *root, int sum) {
+    if (root == NULL) {
+        if (sum == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    bool left = hasPathSum(root->pLeft , sum - root->key);
+    bool right = hasPathSum(root->pRight, sum - root->key);
+
+    if (left == true || right == true) {
+        return true;
+    } else {
+        return false ;
+    }
+}
+
 // viết hàm kiểm tra xem cây nhị phân tìm kiếm bị lệch kiểu gì: RR -> 1; RL -> 2; LL -> 3; LR -> 4
 int typeNotBalanceBST (Node *root) {
 
@@ -537,6 +556,15 @@ int main() {
 
     cout << "tree is not balance at key: " << keyMakingNotBalance(tree->root) << endl;
 
+    // test whether has a path from root to leaf that sum of key of all node in that path equal to sum
+    cout << "has path sum = 69: " << hasPathSum(tree->root, 69) << endl;
+    cout << "has path sum = 89: " << hasPathSum(tree->root, 89) << endl;
+    cout << "has path sum = 262: " << hasPathSum(tree->root, 262) << endl;
+    cout << "has path sum = 268: " << hasPathSum(tree->root, 268) << endl;
+    cout << "has path sum = 329: " << hasPathSum(tree->root, 329) << endl;
+    cout << "has path sum = 350: " << hasPathSum(tree->root, 350) << endl;
+    cout << "has path sum = 225: " << hasPathSum(tree->root, 225) << endl;
+    cout << "has path sum = 2003: " << hasPathSum(tree->root, 2003) << endl;
 
     return 225;
 }
