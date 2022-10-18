@@ -347,9 +347,42 @@ void rotateRight(Node *&root, int key) {
         }
 }
 
+// viết hàm tính chiều cao của cây nhị phân tìm kiếm
+int height (Node *root) {
+    if (root == NULL) {
+        return -1;
+    }
+    return max(height(root->pLeft), height(root->pRight)) + 1;
+}
+
 // viết hàm kiểm tra xem một cây nhị phân tìm kiếm có cân bằng hay không 
 bool isBalanceBST (Node *root) {
+    if (root == NULL) {
+        return true;
+    }
+    if (abs(height(root->pLeft) - height(root->pRight)) <= 1) {
+        return isBalanceBST(root->pLeft) && isBalanceBST(root->pRight);
+    } else {
+        return false;
+    }
+}
 
+// viết hàm kiểm tra xem cây nhị phân mất cân bằng tại node nào
+int keyMakingNotBalance(Node *root) {
+    if (root == NULL) {
+        return -1;
+    }
+    if (abs(height(root->pLeft) - height(root->pRight)) > 1) {
+        return root->key;
+    } else {
+        int left = keyMakingNotBalance(root->pLeft);
+        int right = keyMakingNotBalance(root->pRight);
+        if (left != -1) {
+            return left;
+        } else {
+            return right;
+        }
+    }
 }
 
 // viết hàm kiểm tra xem cây nhị phân tìm kiếm bị lệch kiểu gì: RR -> 1; RL -> 2; LL -> 3; LR -> 4
@@ -363,12 +396,24 @@ void balanceBST (Node *&root) {
 }
 
 // tạo cây nhị phân hoàn chỉnh từ dãy số cho trước
+BST *& makeCompleteBST (int *&arr, int n) {
+
+}
 
 // viết hàm max-heapify
+void maxHeapify (Node *&root) {
+
+}
 
 // viết hàm min-heapify
+void minHeapify (Node *&root) {
+
+}
 
 // viết hàm sắp xếp thuật toán vun đống
+void heapSort (Node *&root) {
+
+}
 
 
 
@@ -477,6 +522,21 @@ int main() {
     // cout << "NLR: ";
     // NLR(tree->root);
     // cout << endl;
+
+    // test height of tree function
+    Node *pHeight = createNode(22);
+    pHeight->pLeft = createNode(5);
+    pHeight->pLeft->pLeft = createNode(2003);
+    pHeight->pRight = createNode(11);
+
+    cout << "height : " << height(pHeight) << endl;
+
+    // test whether a BST is balance
+    cout << "tree is balance: " << isBalanceBST(tree->root) << endl;
+    cout << "pHeight is balance: " << isBalanceBST(pHeight) << endl;
+
+    cout << "tree is not balance at key: " << keyMakingNotBalance(tree->root) << endl;
+
 
     return 225;
 }
