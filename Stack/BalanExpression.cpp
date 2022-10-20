@@ -22,14 +22,16 @@ Node * createNode (int key) {
     Node *pNode = new Node;
     pNode->key = key;
     pNode->hasKey = true;
-    pNode->pNext = NULL;    
+    pNode->pNext = NULL; 
+    return pNode;   
 }
 
-Node *createNode(char data) {
+Node * createNode(char data) {
     Node *pNode = new Node;
     pNode->data = data;
     pNode->hasKey = false;
     pNode->pNext = NULL;
+    return pNode;
 }
 
 // create new stack function
@@ -124,7 +126,7 @@ void printQueue (Queue *Q) {
         if (temp->hasKey == true) {
             cout << temp->key << " ";
         } else {
-            cout << temp->data << " ";
+            cout << (char) temp->data << " ";
         }
         temp = temp->pNext;
     }
@@ -137,22 +139,31 @@ Queue *convertExpString_Queue (string exp) {
     Q->front = NULL;
     Q->rear = NULL;
     for (int i = 0; i < exp.length(); i++) {
-        if ( isOperator(exp[i] || exp[i] == '(' || exp[i] == ')')) {
+        if ( isOperator( exp[i] ) || exp[i] == '(' || exp[i] == ')' ) {
             enqueue(Q, exp[i]);
-        } else if ( i + 1 < exp.length() && isNumber(exp[i+1])) {
-            char s[100] ;
-            s[0] = exp[i];
-            int count = 1;
-            i++;
-            while ( i < exp.length() && isNumber(exp[i])) {
-                s[count++] = exp[i];
-                i++;
+        } else {
+            if (isNumber(exp[i])) {
+                if ( i + 1 < exp.length() && isNumber(exp[i+1])) {
+                    string s = "";
+                    s += exp[i];
+                    i++;
+                    while ( i < exp.length() && isNumber(exp[i])) {
+                        s += exp[i];
+                        i++;
+                    }
+                    enqueue(Q, stoi(s));
+                    i--;
+                } else {
+                    string s = "";
+                    s += exp[i];
+                    enqueue(Q, stoi(s));
+
+                }
             }
-            s[count] = '\0';
-            enqueue(Q, atoi(s));
-            i--;
+
         }
     }
+    return Q;
 }
 
 // convert middle expression into postfix expression
@@ -169,9 +180,14 @@ int calPostfixExp () {
 int main() {
     string exp;
     cout << "enter an expression: ";
+    fflush(stdin);
     getline(cin, exp);
 
     Queue *Q = convertExpString_Queue(exp);
+    if (Q->front->hasKey == true) {
+        cout << "hi: ";
+        cout << Q->front->key << endl;
+    }
     printQueue(Q);
 
     return 225;
