@@ -2,19 +2,19 @@
 using namespace std;
 
 struct Node {
-    int key;
-    char data;
+    int key ;
+    char data ;
     bool hasKey;
     Node *pNext;
 };
 
 struct Stack {
-    Node *top;
+    Node *top = NULL;
 };
 
 struct Queue {
-    Node *front;
-    Node *rear;
+    Node *front = NULL;
+    Node *rear = NULL;
 };
 
 // create node function
@@ -38,6 +38,8 @@ Node * createNode(char data) {
 Stack *createStack (Node *&pNode) {
     Stack *S = new Stack;
     S->top = pNode;
+    pNode->pNext = NULL;
+    return S;
 }
 
 // create new queue function
@@ -45,6 +47,8 @@ Queue *createQueue(Node *&pNode) {
     Queue *Q = new Queue;
     Q->front = pNode;
     Q->rear = pNode;
+    Q->rear->pNext = NULL;
+    return Q;
 }
 
 // enqueue a element to queue
@@ -79,18 +83,45 @@ void pop (Stack *S) {
     delete (temp);
 }
 
+int pop (Stack  *&S, bool hasKey) {
+    if (hasKey == true) {
+        Node *temp = S->top;
+        int key = S->top->key;
+        delete temp;
+        return key;
+    } else {
+        cout << "not has key\n";
+        exit(225);
+    }
+}char popChar (Stack *&S) {
+    Node *temp = S->top;
+    S->top = S->top->pNext;
+    char c = temp->data;
+    delete temp;
+    return c;
+}
+
 // push an element to top of stack
-void push (Stack *&S, char key) {
+void push (Stack *&S, char data) {
     if (S->top == NULL) {
-        cout << "key: " << key << endl;
-        Node *pNode = createNode(key);
-        cout << "2245";
-        S->top = pNode;
+        Node *pNode = createNode(data);
+        S = createStack(pNode);
         return ;
     }
     Node *pNode = new Node;
-    pNode->data = key;
+    pNode->data = data;
     pNode->hasKey = false;
+    pNode->pNext = S->top;
+    S->top = pNode;
+}
+
+void push (Stack *&S, int key) {
+    if (S->top == NULL) {
+        Node *pNode = createNode(key);
+        S = createStack(pNode);
+        return ;
+    }
+    Node *pNode = createNode(key);
     pNode->pNext = S->top;
     S->top = pNode;
 }
@@ -196,13 +227,11 @@ Queue *convertMidExpIntoPostExp (Queue *P) {
     Queue *Q = new Queue;
     Node *temp = P->front;
     while (temp != NULL) {
-        if (temp->hasKey == true) {
+        if (temp->hasKey == true) { 
             enqueue(Q, temp->key);
-            cout << "enqueue " << temp->key << endl;
             temp = temp->pNext;
             continue;
         } else {
-            cout << "range: " << temp->data << endl;
             if (temp->data == ')') {
                 while (S->top != NULL) {
                         if (S->top->data == '(') {
@@ -224,8 +253,6 @@ Queue *convertMidExpIntoPostExp (Queue *P) {
                 if (S->top == NULL || ! isOperator(S->top->data) || isMorePriority(temp->data, S->top->data)) {
                     push(S, temp->data);
                     temp = temp->pNext;
-                    cout << "day toan tu vao stack\n";
-
                     continue;
                 }
                 while (S->top != NULL && isOperator(S->top->data) && isMorePriority(S->top->data, temp->data)) {
@@ -238,13 +265,45 @@ Queue *convertMidExpIntoPostExp (Queue *P) {
             }
         }
     }
-    cout << "heli";
+    while (S->top != NULL) {
+        char c = popChar(S);
+        enqueue(Q, c);
+    }
     return Q;
 }
 
-// calculate the value of postfix expressions
-int calPostfixExp () {
+// calculate the value of expression
+int calculate (int a, int b, char _operator) {
+    switch (_operator) {
+        case '+':
+            return a + b;
+        case '-':
+            return a - b;
+        case '*' : 
+            return a * b;
+        case '/':
+            return a / b;
+        case '^':
+            return pow (a,b);
+    }
+} 
 
+// calculate the value of postfix expressions
+int calPostfixExp (Queue *Q) {
+    Stack *S = new Stack;
+    S->top = Q->front;
+    Stack *P = new Stack ;  // used to save the numbers
+    while (S->top != NULL) {
+        if (S->top->hasKey == true) {
+            push(P, S->top->key);
+            pop (S);
+        } else {
+            int a = pop(P, true);
+            int b = pop(P, true);
+            push(S, calculate(a, b, S->top->data));
+        }
+    }
+    return P->top->key;
 }
 
 
