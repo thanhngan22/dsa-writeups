@@ -404,6 +404,7 @@ bool hasPathSum(Node *root, int sum) {
     }
 }
 
+
 // viết hàm kiểm tra xem cây nhị phân tìm kiếm bị lệch kiểu gì: RR -> 1; RL -> 2; LL -> 3; LR -> 4
 int typeNotBalanceBST (Node *root) {
 
@@ -411,26 +412,83 @@ int typeNotBalanceBST (Node *root) {
 
 // viết hàm cân bằng lại cây nhị phân tìm kiếm nếu cây bị lệch
 void balanceBST (Node *&root) {
-
+ 
 }
 
 // tạo cây nhị phân hoàn chỉnh từ dãy số cho trước
-BST *& makeCompleteBST (int *&arr, int n) {
+Node * makeCompleteBST (int *arr, int i, int n) {
+    Node *pNode = NULL;
+    if (i < n) {
+        pNode = createNode(arr[i]);
+        pNode->pLeft = makeCompleteBST(arr, 2 * i + 1, n);
+        pNode->pRight = makeCompleteBST(arr, 2 * i + 2, n);
+    }
+    return pNode;
+}
 
+// hàm hoán đổi giá trị
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
 // viết hàm max-heapify
-void maxHeapify (Node *&root) {
-
+void maxHeapify (Node *root) {
+    if (root->pLeft != NULL && root->pRight != NULL) {
+        int l = root->pLeft->key;
+        int r = root->pRight->key;
+        if (l > r && l > root->key) {
+            swap(root->key, root->pLeft->key);
+        } else if (l < r && root->key < r) {
+            swap(root->key, root->pRight->key);
+        }
+        return;
+    }
+    if (root->pLeft != NULL) {
+        if (root->pLeft->key > root->key) {
+            swap(root->key, root->pLeft->key);
+            return;
+        }
+    }
+    if (root->pRight != NULL) {
+        if (root->key < root->pRight->key) {
+            swap(root->key, root->pRight->key);
+        }
+    }
 }
 
 // viết hàm min-heapify
-void minHeapify (Node *&root) {
-
+void minHeapify (Node *root) {
+    if (root->pLeft != NULL && root->pRight != NULL) {
+        int l = root->pLeft->key;
+        int r = root->pRight->key;
+        if (l < r && l < root->key) {
+            swap(root->key, root->pLeft->key);
+        } else if (l > r && root->key > r) {
+            swap(root->key, root->pRight->key);
+        }
+        return;
+    }
+    if (root->pLeft != NULL) {
+        if (root->pLeft->key < root->key) {
+            swap(root->key, root->pLeft->key);
+            return;
+        }
+    }
+    if (root->pRight != NULL) {
+        if (root->key > root->pRight->key) {
+            swap(root->key, root->pRight->key);
+        }
+    }
 }
 
 // viết hàm sắp xếp thuật toán vun đống
-void heapSort (Node *&root) {
+void heapSort_max (Node *root) {
+
+}
+
+void heapSort_min (Node *root) {
 
 }
 
@@ -468,30 +526,30 @@ int main() {
     cout << "LRN: ";
     LRN(tree->root);
 
-    // max value of tree
-    cout << "max value of BST tree: " << maxNode(tree) << endl;
+    // // max value of tree
+    // cout << "max value of BST tree: " << maxNode(tree) << endl;
 
-    // check whether existing 27 , 35, 5 and 103 or not
-    cout << "27: " << isExistNode(tree->root, 27) << endl;
-    cout << "35: " << isExistNode(tree->root, 35) << endl;
-    cout << "5: " << isExistNode(tree->root, 5) << endl;
-    cout << "103: " << isExistNode(tree->root, 103) << endl;
+    // // check whether existing 27 , 35, 5 and 103 or not
+    // cout << "27: " << isExistNode(tree->root, 27) << endl;
+    // cout << "35: " << isExistNode(tree->root, 35) << endl;
+    // cout << "5: " << isExistNode(tree->root, 5) << endl;
+    // cout << "103: " << isExistNode(tree->root, 103) << endl;
 
-    // is BST
-    // create a tree to check
-    Node *nodeTree2 = createNode(22);
-    BST *tree2 = createBST(nodeTree2);
-    Node *tree2Left = createNode(2003);
-    Node *tree2Right = createNode(5);
-    tree2->root->pLeft = tree2Left;
-    tree2->root->pRight = tree2Right;
+    // // is BST
+    // // create a tree to check
+    // Node *nodeTree2 = createNode(22);
+    // BST *tree2 = createBST(nodeTree2);
+    // Node *tree2Left = createNode(2003);
+    // Node *tree2Right = createNode(5);
+    // tree2->root->pLeft = tree2Left;
+    // tree2->root->pRight = tree2Right;
 
-    cout << "is BST ? " <<  isBST(tree->root) << endl;
-    cout << "is BST ? " << isBST(tree2->root) << endl;
+    // cout << "is BST ? " <<  isBST(tree->root) << endl;
+    // cout << "is BST ? " << isBST(tree2->root) << endl;
 
-    // value of most left and most right
-    cout << "most left: " << mostLeft(tree->root) << endl;
-    cout << "most right: " << mostRight(tree->root) << endl;
+    // // value of most left and most right
+    // cout << "most left: " << mostLeft(tree->root) << endl;
+    // cout << "most right: " << mostRight(tree->root) << endl;
 
     // // delete 8
     // deleteNode(tree->root, 8);
@@ -542,29 +600,36 @@ int main() {
     // NLR(tree->root);
     // cout << endl;
 
-    // test height of tree function
-    Node *pHeight = createNode(22);
-    pHeight->pLeft = createNode(5);
-    pHeight->pLeft->pLeft = createNode(2003);
-    pHeight->pRight = createNode(11);
+    // // test height of tree function
+    // Node *pHeight = createNode(22);
+    // pHeight->pLeft = createNode(5);
+    // pHeight->pLeft->pLeft = createNode(2003);
+    // pHeight->pRight = createNode(11);
 
-    cout << "height : " << height(pHeight) << endl;
+    // cout << "height : " << height(pHeight) << endl;
 
-    // test whether a BST is balance
-    cout << "tree is balance: " << isBalanceBST(tree->root) << endl;
-    cout << "pHeight is balance: " << isBalanceBST(pHeight) << endl;
+    // // test whether a BST is balance
+    // cout << "tree is balance: " << isBalanceBST(tree->root) << endl;
+    // cout << "pHeight is balance: " << isBalanceBST(pHeight) << endl;
 
-    cout << "tree is not balance at key: " << keyMakingNotBalance(tree->root) << endl;
+    // cout << "tree is not balance at key: " << keyMakingNotBalance(tree->root) << endl;
 
-    // test whether has a path from root to leaf that sum of key of all node in that path equal to sum
-    cout << "has path sum = 69: " << hasPathSum(tree->root, 69) << endl;
-    cout << "has path sum = 89: " << hasPathSum(tree->root, 89) << endl;
-    cout << "has path sum = 262: " << hasPathSum(tree->root, 262) << endl;
-    cout << "has path sum = 268: " << hasPathSum(tree->root, 268) << endl;
-    cout << "has path sum = 329: " << hasPathSum(tree->root, 329) << endl;
-    cout << "has path sum = 350: " << hasPathSum(tree->root, 350) << endl;
-    cout << "has path sum = 225: " << hasPathSum(tree->root, 225) << endl;
-    cout << "has path sum = 2003: " << hasPathSum(tree->root, 2003) << endl;
+    // // test whether has a path from root to leaf that sum of key of all node in that path equal to sum
+    // cout << "has path sum = 69: " << hasPathSum(tree->root, 69) << endl;
+    // cout << "has path sum = 89: " << hasPathSum(tree->root, 89) << endl;
+    // cout << "has path sum = 262: " << hasPathSum(tree->root, 262) << endl;
+    // cout << "has path sum = 268: " << hasPathSum(tree->root, 268) << endl;
+    // cout << "has path sum = 329: " << hasPathSum(tree->root, 329) << endl;
+    // cout << "has path sum = 350: " << hasPathSum(tree->root, 350) << endl;
+    // cout << "has path sum = 225: " << hasPathSum(tree->root, 225) << endl;
+    // cout << "has path sum = 2003: " << hasPathSum(tree->root, 2003) << endl;
+
+    // // test making complete tree from a given array function
+    // int arr[] = {22, 5, 2003, 11, 4, 2011, 13 ,4, 1999};
+    // Node *root = makeCompleteBST(arr, 0, sizeof(arr)/sizeof(int));
+    // cout << "NLR: ";
+    // NLR(root);
+    // cout << endl;
 
     return 225;
 }
