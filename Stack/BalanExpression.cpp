@@ -252,10 +252,13 @@ Queue *convertExpString_Queue (string exp) {
     Q->rear = NULL;
     for (int i = 0; i < exp.length(); i++) {
         if ( isOperator( exp[i] ) || exp[i] == '(' || exp[i] == ')' ) {
+            // if it is operator such as + - * / ^ or ( ) : enqueue 
             enqueue(Q, exp[i]);
         } else {
             if (isNumber(exp[i])) {
+                // if it is a number: 
                 if ( i + 1 < exp.length() && isNumber(exp[i+1])) {
+                    // if that number >= 10 : find next other number and concat them, then create node with that value and enqueue
                     string s = "";
                     s += exp[i];
                     i++;
@@ -266,6 +269,7 @@ Queue *convertExpString_Queue (string exp) {
                     enqueue(Q, stoi(s));
                     i--;
                 } else {
+                    // if it only has a number such as 0 -> 9
                     string s = "";
                     s += exp[i];
                     enqueue(Q, stoi(s));
@@ -286,12 +290,15 @@ Queue *convertMidExpIntoPostExp (Queue *P) {
     Node *temp = P->front;
     while (temp != NULL) {
         if (temp->hasKey == true) { 
+            // if it is a number: 
             enqueue(Q, temp->key);
             temp = temp->pNext;
             continue;
         } else {
-            if (temp->data == ')') {
+            if (temp->data == ')') { 
+                // when meeting a ' ) ' :
                 while (S->top != NULL) {
+                    // pop element of of stack and enqueue to queue until meeting ')'
                         if (S->top->data == '(') {
                             pop(S);
                             temp = temp->pNext;
@@ -303,17 +310,21 @@ Queue *convertMidExpIntoPostExp (Queue *P) {
                 }
             }
             if (temp->data == '(') {
+                // just need to push it into stack
                 push(S, temp->data);
                 temp = temp->pNext;
                 continue;
             }
             if (isOperator(temp->data)) {
+                // if it is a operator such as: + - * / ^
                 if (S->top == NULL || ! isOperator(S->top->data) || isMorePriority(temp->data, S->top->data)) {
+                    // if the element in top of stack isn't a operator or being a operator but has less priority than current operator or not having any element in stack
                     push(S, temp->data);
                     temp = temp->pNext;
                     continue;
                 }
                 while (S->top != NULL && isOperator(S->top->data) && isMorePriority(S->top->data, temp->data)) {
+                    // if the operator in top of stack has more priority than current operator: pop until the condition get false value
                     enqueue(Q, S->top->data);
                     pop(S);
                 } 
@@ -324,6 +335,7 @@ Queue *convertMidExpIntoPostExp (Queue *P) {
         }
     }
     while (S->top != NULL) {
+        // get other operators in stack 
         char c = popChar(S);
         enqueue(Q, c);
     }
