@@ -2,6 +2,7 @@
 using namespace std;
 
 struct Node {
+    float result;
     int key ;
     char data ;
     bool hasKey;
@@ -17,7 +18,7 @@ struct Queue {
     Node *rear = NULL;
 };
 
-// create node function
+// create a node having integer type
 Node * createNode (int key) {
     Node *pNode = new Node;
     pNode->key = key;
@@ -26,6 +27,7 @@ Node * createNode (int key) {
     return pNode;   
 }
 
+// create a node having char type
 Node * createNode(char data) {
     Node *pNode = new Node;
     pNode->data = data;
@@ -34,7 +36,14 @@ Node * createNode(char data) {
     return pNode;
 }
 
-// create new stack function
+// init a empty stack
+Stack *initStack() {
+    Stack *S = new Stack;
+    S->top = NULL;
+    return S;
+}
+
+// create a new stack function
 Stack *createStack (Node *&pNode) {
     Stack *S = new Stack;
     S->top = pNode;
@@ -42,7 +51,7 @@ Stack *createStack (Node *&pNode) {
     return S;
 }
 
-// create new queue function
+// create a new queue function
 Queue *createQueue(Node *&pNode) {
     Queue *Q = new Queue;
     Q->front = pNode;
@@ -51,7 +60,7 @@ Queue *createQueue(Node *&pNode) {
     return Q;
 }
 
-// enqueue a element to queue
+// enqueue a element having integer type
 void enqueue (Queue *&Q, int key) {
     if (Q->front == NULL) {
         Node *pNode = createNode(key);
@@ -64,6 +73,7 @@ void enqueue (Queue *&Q, int key) {
     Q->rear = pNode;
 }
 
+// enqueue a element having char type
 void enqueue (Queue *&Q, char data) {
     if (Q->front == NULL) {
         Node *pNode = createNode(data);
@@ -83,17 +93,31 @@ void pop (Stack *S) {
     delete (temp);
 }
 
+// pop a node having integer type
 int pop (Stack  *&S, bool hasKey) {
     if (hasKey == true) {
         Node *temp = S->top;
         int key = S->top->key;
+        S->top = S->top->pNext;
         delete temp;
         return key;
     } else {
         cout << "not has key\n";
         exit(225);
     }
-}char popChar (Stack *&S) {
+}
+
+// pop a node having float type
+float popFloat (Stack *&S) {
+    Node *temp = S->top;
+    S->top = S->top->pNext;
+    float f = temp->result;
+    delete temp;
+    return f;
+} 
+
+// pop a node having char type
+char popChar (Stack *&S) {
     Node *temp = S->top;
     S->top = S->top->pNext;
     char c = temp->data;
@@ -115,6 +139,7 @@ void push (Stack *&S, char data) {
     S->top = pNode;
 }
 
+// push a integer into stack
 void push (Stack *&S, int key) {
     if (S->top == NULL) {
         Node *pNode = createNode(key);
@@ -125,6 +150,39 @@ void push (Stack *&S, int key) {
     pNode->pNext = S->top;
     S->top = pNode;
 }
+
+// convert Integer into float and push to stack
+void pushIntToFloat (Stack *&S, int key) {
+    if (S->top == NULL) {
+        Node *pNode = new Node;
+        pNode->result = (float) key;
+        pNode->pNext = NULL;
+        S = initStack();
+        S->top = pNode;
+        return ;
+    }
+    Node *pNode = new Node;
+    pNode->result = (float) key;
+    pNode->pNext = S->top;
+    S->top = pNode;
+}
+
+// push a stack into stack
+void push (Stack *&S, float result) {
+    if (S->top == NULL) {
+        Node *pNode = new Node;
+        S = initStack();
+        pNode->result = result;
+        pNode->pNext = NULL;
+        S->top = pNode;
+        return ;
+    }
+    Node *pNode = new Node;
+    pNode->result = result;
+    pNode->pNext = S->top;
+    S->top = pNode;
+}
+
 
 // check whether a char is number or not
 bool isNumber (char c) {
@@ -273,7 +331,7 @@ Queue *convertMidExpIntoPostExp (Queue *P) {
 }
 
 // calculate the value of expression
-int calculate (int a, int b, char _operator) {
+float calculate (float a, float b, char _operator) {
     switch (_operator) {
         case '+':
             return a + b;
@@ -282,28 +340,31 @@ int calculate (int a, int b, char _operator) {
         case '*' : 
             return a * b;
         case '/':
-            return a / b;
+            return  (a * 1.0) /b ;
         case '^':
             return pow (a,b);
     }
 } 
 
 // calculate the value of postfix expressions
-int calPostfixExp (Queue *Q) {
-    Stack *S = new Stack;
+float calPostfixExp (Queue *Q) {
+    Stack *S = initStack();
     S->top = Q->front;
-    Stack *P = new Stack ;  // used to save the numbers
+    Stack *P = initStack();  // used to save the numbers
     while (S->top != NULL) {
         if (S->top->hasKey == true) {
-            push(P, S->top->key);
+            pushIntToFloat(P, S->top->key);
             pop (S);
         } else {
-            int a = pop(P, true);
-            int b = pop(P, true);
-            push(S, calculate(a, b, S->top->data));
+            float b = popFloat(P);
+            float a = popFloat(P);
+            // cout << "a,b: " << a << " " << b << endl;
+            push(P, calculate(a, b, S->top->data));
+            // cout << "result: " << P->top->result << endl;
+            pop(S);
         }
     }
-    return P->top->key;
+    return P->top->result;
 }
 
 
@@ -322,6 +383,11 @@ int main() {
     cout << "Postfix expression: ";
     Queue *Q = convertMidExpIntoPostExp(P);
     printQueue(Q);
+
+    // calculate the value of postfix expression
+    cout << "Value: " << calPostfixExp(Q) << endl;
+
+    /* Code rối nhưng mà lười sửa, ai đọc code tôi hiểu là thiên thần :) */
 
     return 225;
 }
