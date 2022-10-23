@@ -368,16 +368,16 @@ bool isBalanceBST (Node *root) {
 }
 
 // viết hàm kiểm tra xem cây nhị phân mất cân bằng tại node nào
-int keyMakingNotBalance(Node *root) {
+Node *keyMakingNotBalance(Node *root) {
     if (root == NULL) {
-        return -1;
+        return NULL;
     }
     if (abs(height(root->pLeft) - height(root->pRight)) > 1) {
-        return root->key;
+        return root;
     } else {
-        int left = keyMakingNotBalance(root->pLeft);
-        int right = keyMakingNotBalance(root->pRight);
-        if (left != -1) {
+        Node *left = keyMakingNotBalance(root->pLeft);
+        Node  *right = keyMakingNotBalance(root->pRight);
+        if (left != NULL) {
             return left;
         } else {
             return right;
@@ -402,17 +402,6 @@ bool hasPathSum(Node *root, int sum) {
     } else {
         return false ;
     }
-}
-
-
-// viết hàm kiểm tra xem cây nhị phân tìm kiếm bị lệch kiểu gì: RR -> 1; RL -> 2; LL -> 3; LR -> 4
-int typeNotBalanceBST (Node *root) {
-
-}
-
-// viết hàm cân bằng lại cây nhị phân tìm kiếm nếu cây bị lệch
-void balanceBST (Node *&root) {
- 
 }
 
 // tạo cây nhị phân hoàn chỉnh từ dãy số cho trước
@@ -490,6 +479,51 @@ void heapSort_max (Node *root) {
 
 void heapSort_min (Node *root) {
 
+}
+
+
+// viết hàm kiểm tra xem cây nhị phân tìm kiếm bị lệch kiểu gì: RR -> 1; RL -> 2; LL -> 3; LR -> 4
+int typeNotBalanceBST (Node *root) {
+    // tìm đến node mà cây bị mất cân bằng
+    root = keyMakingNotBalance(root);
+
+    if (root->pRight != NULL) {
+        if (root->pRight->pRight != NULL) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+
+    if (root->pLeft != NULL) {
+        if (root->pLeft->pLeft != NULL) {
+            return 3;
+        } else {
+            return 4;
+        }
+    }
+}
+
+void printTypeNotBalance (int type) {
+    switch (type) {
+        case 1: 
+            cout << "Type of not balance: RR" << endl;
+            return;
+        case 2 :
+            cout << "Type of not balance: RL" << endl;
+            return;
+        case 3:
+            cout << "Type of not balance: LL" << endl;
+            return;
+        case 4:
+            cout << "Type of not balance: LR" << endl;
+            return;
+    }
+}
+
+// viết hàm cân bằng lại cây nhị phân tìm kiếm nếu cây bị lệch
+void balanceBST (Node *&root) {
+ 
 }
 
 
@@ -612,7 +646,8 @@ int main() {
     // cout << "tree is balance: " << isBalanceBST(tree->root) << endl;
     // cout << "pHeight is balance: " << isBalanceBST(pHeight) << endl;
 
-    // cout << "tree is not balance at key: " << keyMakingNotBalance(tree->root) << endl;
+    cout << "tree is not balance at key: " << keyMakingNotBalance(tree->root)->key << endl;
+    printTypeNotBalance(typeNotBalanceBST(tree->root));
 
     // // test whether has a path from root to leaf that sum of key of all node in that path equal to sum
     // cout << "has path sum = 69: " << hasPathSum(tree->root, 69) << endl;
@@ -630,6 +665,9 @@ int main() {
     // cout << "NLR: ";
     // NLR(root);
     // cout << endl;
+
+    // check what type of not balance
+    
 
     return 225;
 }
