@@ -256,7 +256,7 @@ void deleteNode(Node *&root, int key) {
 }
 
 // viết hàm xoay trái một node trong cây nhị phân tìm kiếm (mặc định là node cần xoay có node con phải khỏi cần kiểm tra)
-void rotateLeft(Node *&root, int key) {
+void rotateLeft(Node *root, int key) {
     Node *temp = root;
     Node *prev = NULL;
     while (temp->key != key) {
@@ -274,7 +274,7 @@ void rotateLeft(Node *&root, int key) {
                 // trường hợp đó là node root
                 root = temp->pRight;
             } else {
-                if (prev->pRight->key == key) {
+                if (prev->pRight != NULL && prev->pRight->key == key) {
                     prev->pRight = temp->pRight;
 
                 } else {
@@ -289,20 +289,20 @@ void rotateLeft(Node *&root, int key) {
                 // trường hợp đó là node root
                 root = temp->pRight;
             } else {
-                if (prev->pRight->key == key) {
+                if (prev->pRight != NULL && prev->pRight->key == key) {
                     prev->pRight = temp->pRight;
-
                 } else {
                     prev->pLeft = temp->pRight;
                 }
             }           
             temp->pRight->pLeft = temp;
+            temp->pRight = NULL;
             return;
         }
 }
 
 // viết hàm xoay phải một node trong cây nhị phân tìm kiếm
-void rotateRight(Node *&root, int key) {
+void rotateRight(Node *root, int key) {
     Node *temp = root;
     Node *prev = NULL;
     while (temp->key != key) {
@@ -343,6 +343,7 @@ void rotateRight(Node *&root, int key) {
                 }
             }           
             temp->pLeft->pRight = temp;
+            temp->pLeft = NULL;
             return;
         }
 }
@@ -522,7 +523,30 @@ void printTypeNotBalance (int type) {
 }
 
 // viết hàm cân bằng lại cây nhị phân tìm kiếm nếu cây bị lệch
-void balanceBST (Node *&root) {
+void balanceBST (Node *root) {
+    // define type of not balance : RR -> 1; RL -> 2; LL -> 3; LR -> 4
+
+    int type = typeNotBalanceBST(root);
+    Node *pNode = keyMakingNotBalance(root);
+
+    switch (type) {
+        case 1: // RR => rotate left at not balance node
+            rotateLeft(root, pNode->key);
+            return;
+        case 2: // RL => rotate right at next child node and rotate left at not balance node
+            rotateRight(root, pNode->pRight->key);
+            rotateLeft(root, pNode->key);
+            return ;
+        case 3: // LL => rotate right at not balance node
+            rotateRight(root, pNode->key);
+            return;
+        case 4: // LR => rotate left at next child node and rotate right at not balance node
+            rotateLeft(root, pNode->pLeft->key);
+            rotateRight(root, pNode->key);
+            return ;
+        default:
+                return;
+    }
  
 }
 
@@ -646,8 +670,19 @@ int main() {
     // cout << "tree is balance: " << isBalanceBST(tree->root) << endl;
     // cout << "pHeight is balance: " << isBalanceBST(pHeight) << endl;
 
+    // find the node that tree is not balance there
     cout << "tree is not balance at key: " << keyMakingNotBalance(tree->root)->key << endl;
+
+    // type of not balance
+    cout << "Tree is balance : " << isBalanceBST(tree->root) << endl;
     printTypeNotBalance(typeNotBalanceBST(tree->root));
+
+    // do balance tree
+    balanceBST(tree->root);
+
+    // check whether tree is balanced or not
+    cout << "Tree is balance: " << isBalanceBST(tree->root) << endl;
+
 
     // // test whether has a path from root to leaf that sum of key of all node in that path equal to sum
     // cout << "has path sum = 69: " << hasPathSum(tree->root, 69) << endl;
