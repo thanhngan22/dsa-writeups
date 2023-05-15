@@ -23,10 +23,11 @@
 _be constantly updated_
 
 <h3 style="color:green">📝 List of challenges</h3> 
+
 #### Bit Manipulation
 
 
-z#### Constructive Alogorithms
+#### Constructive Alogorithms
 
 
 #### Dynamic Programming
