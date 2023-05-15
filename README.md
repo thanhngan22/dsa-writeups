@@ -1,11 +1,11 @@
-## 💦 HackerRank solutions
+<h2 style="color: green">💦 HackerRank solutions</h2> 
 
 ```tsx
 💦      This repository contains my solutions to HackerRank problems.
         Solutions are presented in multiple languages such as c/cpp, python, java, typescript, etc.
 ```
 
-### 📜 Table of Contents
+<h3 style="color:green"> 📜 Table of Contents </h3>
 
 - [Implementation](./Implementation)
 - [Strings](./Strings)
@@ -22,11 +22,11 @@
 
 _be constantly updated_
 
-### 📝 List of challenges
+<h3 style="color:green">📝 List of challenges</h3> 
 #### Bit Manipulation
 
 
-#### Constructive Alogorithms
+z#### Constructive Alogorithms
 
 
 #### Dynamic Programming
@@ -128,7 +128,7 @@ _be constantly updated_
 - [Distant Pairs](./Search/Distant.Pairs)
 - [Gena Playing Hanoi](./Search/Gena.Playing.Hanoi)
 - [Gridland Metro](./Search/Gridland.Metro)
-- [Hackerland Radio Tr�nmitters](./Search/Hackerland.Radio.Tr�nmitters)
+- [Hackerland Radio Tr�nmitters](./Search/Hackerland.Radio.Tr�nmitters)
 - [Ice Cream Parlor](./Search/Ice.Cream.Parlor)
 - [King Richard Knights](./Search/King.Richard.Knights)
 - [KnightL on a Chessboard](./Search/KnightL.on.a.Chessboard)
@@ -210,3 +210,4 @@ _be constantly updated_
 - [Stack](./Others/Stack)
 - [Tree](./Others/Tree)
 - [Warmup](./Others/Warmup)
+
